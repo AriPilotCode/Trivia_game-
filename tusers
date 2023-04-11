@@ -1,3 +1,3 @@
-{'test':{'password':'test', 'score':0, 'questions_asked':[]}, 
-'abc':{'password':'123', 'score':50, 
-'questions_asked':[]},'master':{'password':'master', 'score':200,  'questions_asked':[]}}
+{'ariel':{'password':'1234', 'score':0, 'questions_asked':[]},/n
+'hodaya':{'password':'1234', 'score':50, 'questions_asked':[]},/n
+'noam':{'password':'1234', 'score':200,  'questions_asked':[]}}
