@@ -4,6 +4,7 @@ services:
   web:
     build: .
     image: trivia_game_web
+    container_name: trivia_game_web
     ports:
       - "5679:5679"
     environment:
@@ -18,6 +19,7 @@ services:
 
   db:
     image: postgres:13
+    container_name: trivia_game_db
     environment:
       POSTGRES_DB: mydatabase
       POSTGRES_USER: user
