@@ -3,14 +3,13 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - main
+      - '*'  # This makes the pipeline run on push to any branch
   pull_request:
     branches:
-      - main
+      - '*'  # This makes the pipeline run on pull requests to any branch
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -34,18 +33,43 @@ jobs:
     - name: List Docker Containers
       run: docker ps
 
+    - name: Save Docker state
+      run: docker-compose ps -q > container_ids.txt
+
+    - name: Upload Docker state
+      uses: actions/upload-artifact@v2
+      with:
+        name: container_ids
+        path: container_ids.txt
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
+    - name: Download Docker state
+      uses: actions/download-artifact@v2
+      with:
+        name: container_ids
+
     - name: Run Tests
       run: |
-        container_name=$(docker ps --filter "name=trivia_game_web" --format "{{.Names}}")
-        echo "Container Name: $container_name"
-        if [ -n "$container_name" ]; then
-          docker exec $container_name pytest tests/
+        container_id=$(cat container_ids.txt | head -n 1)
+        echo "Container ID: $container_id"
+        if [ -n "$container_id" ]; then
+          docker exec $container_id pytest tests/
         else
           echo "Error: Container not found" >&2
           exit 1
         fi
-
-
 
     - name: Shut down Docker Containers
       run: docker-compose down
