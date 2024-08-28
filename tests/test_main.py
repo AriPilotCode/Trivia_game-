@@ -1,29 +1,26 @@
 import pytest
 import json
-from app.server_multi_tcp import app, get_db
+from app.server_multi_tcp import app, create_users_table, get_db
 
+@pytest.fixture(scope='module')
+def init_db():
+    """Initialize the database before tests run and clean up afterwards."""
+    with app.app_context():
+        # Create tables and initialize the database
+        create_users_table()  # Ensure the table exists
+    yield
+    # Optionally, you can add teardown logic here if needed
 
 @pytest.fixture
 def client():
+    """Create a test client for the Flask application."""
     app.config['TESTING'] = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     with app.test_client() as client:
         yield client
 
-
-@pytest.fixture
-def init_db():
-    db = get_db()
-    with app.app_context():
-        with app.open_resource('schema.sql', mode='r') as f:
-            cur = db.cursor()
-            cur.execute(f.read())
-            db.commit()
-            cur.close()
-    return db
-
-
 def test_register(client, init_db):
+    """Test user registration endpoint."""
     response = client.post('/register', json={
         'username': 'testuser',
         'password': 'password123'
@@ -39,8 +36,8 @@ def test_register(client, init_db):
     assert response.status_code == 400
     assert b"Username already exists" in response.data
 
-
-def test_login(client):
+def test_login(client, init_db):
+    """Test user login endpoint."""
     # Register a user first
     client.post('/register', json={
         'username': 'testuser',
@@ -63,8 +60,8 @@ def test_login(client):
     assert response.status_code == 401
     assert b"Invalid username or password" in response.data
 
-
-def test_get_question(client):
+def test_get_question(client, init_db):
+    """Test getting a question."""
     # Register and login a user first
     client.post('/register', json={
         'username': 'testuser',
@@ -87,8 +84,8 @@ def test_get_question(client):
     data = json.loads(response.data)
     assert 'question' in data
 
-
-def test_submit_answer(client):
+def test_submit_answer(client, init_db):
+    """Test submitting an answer."""
     # Register and login a user first
     client.post('/register', json={
         'username': 'testuser',
@@ -129,4 +126,3 @@ def test_submit_answer(client):
     })
     assert response.status_code == 200
     assert b"Incorrect answer" in response.data
-
