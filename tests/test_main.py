@@ -20,6 +20,7 @@ def test_register(client, init_db):
     assert response.status_code == 400
     assert b"Username already exists" in response.data
 
+
 def test_login(client, init_db):
     """Test user login endpoint."""
     # Register a user first
@@ -44,6 +45,7 @@ def test_login(client, init_db):
     assert response.status_code == 401
     assert b"Invalid username or password" in response.data
 
+
 def test_get_question(client, init_db):
     """Test getting a question."""
     # Register and login a user first
@@ -67,6 +69,7 @@ def test_get_question(client, init_db):
     assert response.status_code == 200
     data = json.loads(response.data)
     assert 'question' in data
+
 
 def test_submit_answer(client, init_db):
     """Test submitting an answer."""
