@@ -1,6 +1,6 @@
 import pytest
 import json
-from app import app, get_db
+from app.app import app, get_db
 
 
 @pytest.fixture
