@@ -34,7 +34,14 @@ jobs:
     - name: Run Tests
       run: |
         container_name=$(docker ps --filter "name=trivia_game_web" --format "{{.Names}}")
-        docker exec $container_name pytest tests/
+        echo "Container Name: $container_name"
+        if [ -n "$container_name" ]; then
+          docker exec $container_name pytest tests/
+        else
+          echo "Error: Container not found" >&2
+          exit 1
+        fi
+
 
 
     - name: Shut down Docker Containers
