@@ -20,6 +20,11 @@ jobs:
     - name: Set up Docker
       uses: docker/setup-buildx-action@v1
 
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
     - name: Build Docker Image
       run: docker-compose build
 
@@ -31,7 +36,7 @@ jobs:
 
     - name: Run Tests
       run: |
-        container_name=$(docker ps --filter "name=trivia_game" --format "{{.Names}}")
+        container_name=$(docker ps --filter "name=trivia_game_web" --format "{{.Names}}")
         echo "Container Name: $container_name"
         if [ -n "$container_name" ]; then
           docker exec $container_name pytest tests/
@@ -39,6 +44,8 @@ jobs:
           echo "Error: Container not found" >&2
           exit 1
         fi
+
+
 
     - name: Shut down Docker Containers
       run: docker-compose down
