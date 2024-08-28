@@ -33,7 +33,9 @@ jobs:
 
     - name: Run Tests
       run: |
-        docker exec trivia_game--web-1 pytest tests/
+        container_name=$(docker ps --filter "name=trivia_game_web" --format "{{.Names}}")
+        docker exec $container_name pytest tests/
+
 
     - name: Shut down Docker Containers
       run: docker-compose down
