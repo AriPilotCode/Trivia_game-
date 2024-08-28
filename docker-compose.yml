@@ -3,6 +3,7 @@ version: '3.8'
 services:
   web:
     build: .
+    image: trivia_game_web
     ports:
       - "5679:5679"
     environment:
