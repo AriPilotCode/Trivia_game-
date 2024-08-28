@@ -312,6 +312,7 @@ def login():
             session['username'] = username
             logger.info(f"User {username} logged in successfully.")
             return jsonify({"status": "success", "message": "Login successful!"}), 200
+
         else:
             return jsonify({"status": "error", "message": "Invalid username or password"}), 401
 
