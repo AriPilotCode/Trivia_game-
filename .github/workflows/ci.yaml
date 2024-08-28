@@ -6,7 +6,7 @@ on:
       - '*'  # Run on any branch
   pull_request:
     branches:
-      - '*'  # Run on any branch
+      - main
 
 jobs:
   build:
