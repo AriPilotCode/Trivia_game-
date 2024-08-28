@@ -6,7 +6,7 @@ on:
       - '*'  # Run on any branch
   pull_request:
     branches:
-      - '*'  # Run on any branch
+      - main
 
 jobs:
   build:
@@ -30,14 +30,16 @@ jobs:
     - name: Run Docker Containers
       run: docker-compose up -d
 
-    - name: List Docker Containers
-      run: docker ps
+    - name: Get Container Name
+      run: |
+        container_name=$(docker ps --filter "name=trivia_game_web" --format "{{.Names}}")
+        echo "$container_name" > container_name.txt
 
-    - name: Upload Docker state
+    - name: Upload Container Name
       uses: actions/upload-artifact@v2
       with:
-        name: docker_state
-        path: docker-compose.yml
+        name: container_name
+        path: container_name.txt
 
   test:
     runs-on: ubuntu-latest
@@ -52,9 +54,14 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose
 
+    - name: Download Container Name
+      uses: actions/download-artifact@v2
+      with:
+        name: container_name
+
     - name: Run Tests
       run: |
-        container_name=$(docker ps --filter "name=trivia_game_web" --format "{{.Names}}")
+        container_name=$(cat container_name.txt)
         echo "Container Name: $container_name"
         if [ -n "$container_name" ]; then
           docker exec $container_name pytest tests/
