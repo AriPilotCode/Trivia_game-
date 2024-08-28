@@ -11,6 +11,9 @@ COPY app /app
 COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 
+
+
+
 # Expose port 5679 for the application
 EXPOSE 5679
 
