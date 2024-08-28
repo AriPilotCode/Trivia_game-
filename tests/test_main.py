@@ -1,6 +1,6 @@
 import pytest
 import json
-from app.app import app, get_db
+from app.server_multi_tcp import app, get_db
 
 
 @pytest.fixture
