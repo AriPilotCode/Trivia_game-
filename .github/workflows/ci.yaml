@@ -30,6 +30,7 @@ jobs:
 
     - name: Run Docker Containers
       run: docker-compose up -d
+      
     - name: Run Tests
       run: |
         container_name=$(docker ps --filter "name=trivia_game_web" --format "{{.Names}}")
