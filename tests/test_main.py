@@ -125,4 +125,5 @@ def test_submit_answer(client, init_db):
         'answer': 'Incorrect answer'
     })
     assert response.status_code == 200
+    print(question_key)
     # assert b"Incorrect answer" in response.data
