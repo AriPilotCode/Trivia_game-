@@ -3,9 +3,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const messageDiv = document.getElementById("message");
     let answerTimer; // Declare a timer variable
 
+    // Fetch the username from the server
+    async function getUsername() {
+        try {
+            const response = await fetch('/get_username'); // Fetching username from the server
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            const data = await response.json();
+            return data.username; // Return the username from the response
+        } catch (error) {
+            console.error('Error fetching username:', error);
+            return null; // Return null if there was an error
+        }
+    }
+
     // Fetch a question
     window.getQuestion = async () => {
-        const username = getUsername();
+        const username = await getUsername(); // Await the username from the server
         if (!username) {
             alert("Please login first.");
             return;
@@ -65,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Function to handle submitting an answer
     window.submitAnswer = async (questionKey, answer) => {
-        const username = getUsername();
+        const username = await getUsername(); // Await the username from the server
 
         if (!username) {
             alert("Please login first.");
@@ -102,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Start the timer for answering a question
     function startAnswerTimer() {
-        const timeLimit = 30; // 30 seconds to answer
+        const timeLimit = 120; // 120 seconds to answer
         let timeLeft = timeLimit;
         const timerDiv = document.getElementById('timer');
 
@@ -140,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Get score
     window.getScore = async () => {
-        const username = getUsername();
+        const username = await getUsername(); // Await the username from the server
         if (!username) {
             alert("Please login first.");
             return;
@@ -201,9 +216,4 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Error logging out.");
         }
     };
-
-    // Utility function to get username from local storage
-    function getUsername() {
-        return localStorage.getItem('username');
-    }
 });

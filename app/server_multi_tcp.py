@@ -473,6 +473,12 @@ def game():
     return render_template('game.html')
 
 
+@app.route('/get_username')
+def get_username():
+    username = session.get('username')  # Assuming 'username' is stored in the session
+    return jsonify({'username': username})  # Send back the username in JSON format
+
+
 # Route to get a random question
 @app.route('/question', methods=['GET'])
 def get_question():
