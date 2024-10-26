@@ -36,13 +36,13 @@ jobs:
         echo "$container_name" > container_name.txt
 
     - name: Upload Container Name
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3   # Updated to v3
       with:
         name: container_name
         path: container_name.txt
 
     - name: Upload Docker Compose File
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3   # Updated to v3
       with:
         name: docker_compose
         path: docker-compose.yml
@@ -61,12 +61,12 @@ jobs:
         sudo apt-get install -y docker-compose
 
     - name: Download Container Name
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3   # Updated to v3
       with:
         name: container_name
 
     - name: Download Docker Compose File
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3   # Updated to v3
       with:
         name: docker_compose
 
